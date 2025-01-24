@@ -1,0 +1,23 @@
+{
+  "name": "@sueno/core",
+  "module": "index.ts",
+  "type": "module",
+  "version": "0.0.1",
+  "private": false,
+  "scripts": {
+    "dev": "bun --hot run index.ts"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "pino": "^9.6.0"
+  }
+}
