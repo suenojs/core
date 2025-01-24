@@ -5,7 +5,9 @@
   "version": "0.0.1",
   "private": false,
   "scripts": {
-    "dev": "bun --hot run index.ts"
+    "dev": "bun --hot run ./examples/basic.ts",
+    "test": "bun test",
+    "test:watch": "bun test --watch"
   },
   "publishConfig": {
     "access": "public"

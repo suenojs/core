@@ -1,5 +1,6 @@
 import type { RouteContext } from './context';
 import type { SuenoLogger } from '../logger';
+import type { MiddlewareHandler } from './middleware';
 
 export type RouteHandler<TPath extends string = string> = (
   ctx: RouteContext<TPath>
@@ -10,7 +11,7 @@ export interface RouteInfo {
   paramNames: string[];
   handler: RouteHandler;
   logger: SuenoLogger;
-  middleware?: any[];
+  middleware?: MiddlewareHandler[];
 }
 
 export type SuenoRouteMap = Map<string, Map<string, RouteInfo>>;

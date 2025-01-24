@@ -2,11 +2,13 @@ import { SuenoLogger, createLogger } from './logger';
 import type { LogLevel } from './logger';
 import type { RouteContext } from './types/context';
 import type { RouteHandler, SuenoRouteMap } from './types/route';
+import type { MiddlewareHandler, NextFunction } from './types/middleware';
 
 export class SuenoRouter {
   public routes: SuenoRouteMap;
   public logger: SuenoLogger;
   private basePath: string;
+  private middleware: MiddlewareHandler[] = [];
 
   private generateNameFromPath(path: string): string {
     // Remove leading/trailing slashes and split into segments
@@ -42,17 +44,51 @@ export class SuenoRouter {
     return `${this.basePath}${normalizedPath}`;
   }
 
-  private addRoute<TPath extends string>(method: string, path: TPath, handler: RouteHandler<any>) {
+  use(handler: MiddlewareHandler) {
+    this.middleware.push(handler);
+    return this;
+  }
+
+  private addRoute<TPath extends string>(
+    method: string,
+    path: TPath,
+    handlers: (RouteHandler<TPath> | MiddlewareHandler)[]
+  ) {
     const fullPath = this.normalizePath(path);
     if (!this.routes.has(method)) {
       this.routes.set(method, new Map());
     }
 
-    // Create a wrapped handler that uses the router's logger
-    const wrappedHandler: RouteHandler = async (ctx: RouteContext) => {
+    // Extract the route handler and middleware
+    const routeHandler = handlers.pop() as RouteHandler<TPath>;
+    const routeMiddleware = handlers as MiddlewareHandler[];
+
+    // Create a wrapped handler that uses the router's logger and executes middleware
+    const wrappedHandler: RouteHandler<TPath> = async (ctx: RouteContext<TPath>) => {
       // Replace the context logger with the router's logger
-      const routerCtx = { ...ctx, logger: this.logger };
-      return handler(routerCtx);
+      const routerCtx = { ...ctx, logger: this.logger } as RouteContext<TPath>;
+
+      // Execute router-level middleware
+      let index = -1;
+      const combinedMiddleware = [...this.middleware, ...routeMiddleware];
+
+      const dispatch = async (i: number): Promise<void> => {
+        if (i <= index) {
+          throw new Error('next() called multiple times');
+        }
+        index = i;
+
+        const handler = combinedMiddleware[i];
+        if (handler) {
+          await handler(routerCtx, () => dispatch(i + 1));
+        }
+      };
+
+      // Execute middleware chain
+      await dispatch(0);
+
+      // Execute the final route handler
+      return routeHandler(routerCtx);
     };
 
     const { pattern, paramNames } = this.parseRoute(fullPath);
@@ -61,6 +97,7 @@ export class SuenoRouter {
       paramNames,
       handler: wrappedHandler,
       logger: this.logger,
+      middleware: [...this.middleware, ...routeMiddleware],
     });
   }
 
@@ -79,23 +116,39 @@ export class SuenoRouter {
     };
   }
 
-  get<TPath extends string>(path: TPath, handler: RouteHandler<any>) {
-    this.addRoute('GET', path, handler);
+  get<TPath extends string>(path: TPath, handler: RouteHandler<TPath>): this;
+  get<TPath extends string>(
+    path: TPath,
+    ...handlers: [...MiddlewareHandler[], RouteHandler<TPath>]
+  ): this {
+    this.addRoute('GET', path, handlers);
     return this;
   }
 
-  post<TPath extends string>(path: TPath, handler: RouteHandler<any>) {
-    this.addRoute('POST', path, handler);
+  post<TPath extends string>(path: TPath, handler: RouteHandler<TPath>): this;
+  post<TPath extends string>(
+    path: TPath,
+    ...handlers: [...MiddlewareHandler[], RouteHandler<TPath>]
+  ): this {
+    this.addRoute('POST', path, handlers);
     return this;
   }
 
-  put<TPath extends string>(path: TPath, handler: RouteHandler<any>) {
-    this.addRoute('PUT', path, handler);
+  put<TPath extends string>(path: TPath, handler: RouteHandler<TPath>): this;
+  put<TPath extends string>(
+    path: TPath,
+    ...handlers: [...MiddlewareHandler[], RouteHandler<TPath>]
+  ): this {
+    this.addRoute('PUT', path, handlers);
     return this;
   }
 
-  delete<TPath extends string>(path: TPath, handler: RouteHandler<any>) {
-    this.addRoute('DELETE', path, handler);
+  delete<TPath extends string>(path: TPath, handler: RouteHandler<TPath>): this;
+  delete<TPath extends string>(
+    path: TPath,
+    ...handlers: [...MiddlewareHandler[], RouteHandler<TPath>]
+  ): this {
+    this.addRoute('DELETE', path, handlers);
     return this;
   }
 
@@ -110,7 +163,7 @@ export class SuenoRouter {
         // Create a wrapped handler that uses the child router's logger
         const wrappedHandler: RouteHandler = async (ctx: RouteContext) => {
           // Use the child router's logger
-          const routerCtx = { ...ctx, logger: router.logger };
+          const routerCtx = { ...ctx, logger: router.logger } as RouteContext;
           return routeInfo.handler(routerCtx);
         };
 
