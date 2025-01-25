@@ -1,0 +1,93 @@
+# @sueno/logger
+
+A flexible and type-safe logging library that supports both console and Pino-based logging with beautiful formatting.
+
+## Features
+
+- Type-safe logger names with generics
+- Beautiful console output with colors
+- Optional Pino integration for production logging
+- Request/Response logging support
+- Trace ID support for request tracking
+- Configurable log levels
+- Detailed logging with structured data
+
+## Installation
+
+```bash
+npm install @sueno/logger
+```
+
+## Usage
+
+### Basic Usage
+
+```typescript
+import { createLogger } from '@sueno/logger';
+
+// Create a default logger (name: ROOT)
+const logger = createLogger();
+
+// Create a typed logger with a specific name
+const featureLogger = createLogger<'feature-1'>({ name: 'feature-1' });
+
+// Log messages
+logger.info('Application started');
+featureLogger.debug('Debug message from feature');
+```
+
+### Configuration Options
+
+```typescript
+import { createLogger } from '@sueno/logger';
+
+const logger = createLogger({
+  name: 'my-service',
+  level: 'debug',
+  traceId: 'request-123',
+  useConsole: true, // Use console.log (default: true)
+  // ... other Pino options when useConsole is false
+});
+```
+
+### HTTP Request Logging
+
+```typescript
+const logger = createLogger<'http'>({ name: 'http' });
+
+logger.request('GET', '/api/users', 200, {
+  duration: 50,
+  details: { userId: 123 },
+});
+```
+
+### System Status Logging
+
+```typescript
+logger.system(200, 'Server started successfully');
+logger.system(500, 'Database connection failed');
+```
+
+### Changing Log Level or Trace ID
+
+```typescript
+logger.setLevel('debug');
+logger.setTraceId('new-trace-id');
+```
+
+## Log Levels
+
+- `debug`: Detailed information for debugging
+- `info`: General information about application operation
+- `warn`: Warning messages for potentially harmful situations
+- `error`: Error messages for serious problems
+
+## Output Format
+
+```
+[2024-01-24T22:57:59.756Z] {TRACE_ID} [LEVEL] {MODULE} - Message/Details
+```
+
+## License
+
+MIT

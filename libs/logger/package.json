@@ -1,0 +1,25 @@
+{
+  "name": "@sueno/logger",
+  "version": "0.1.0",
+  "description": "Flexible and type-safe logging library for Sueno",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "lint": "eslint src --ext .ts"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "fast-redact": "^3.5.0",
+    "pino": "^8.0.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
