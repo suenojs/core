@@ -1,52 +1,96 @@
-# Sueno - Collection of High-Performance Tools for Bun.js 🚀
+# Sueno - Zero-Config & High-Performance Tools for Lazy Developers 🦥
 
-Sueno is a collection of modern, high-performance tools built for Bun.js, designed to make server-side development easier while maintaining type safety and excellent developer experience.
+## 💭 Why I'm Developing Sueno
+
+> As a fullstack developer focusing primarily on backend, I found myself repeating the same setup in every project - configuring loggers, setting up background workers with BullMQ, implementing caching mechanisms, connecting to MinIO for media storage, and much more. I got tired of it.
+>
+> I wanted a toolkit that would let me focus on building features instead of infrastructure. Something I could just npm install and start using immediately with minimal configuration. That's why I created Sueno - a collection of tools that are simple, fast, and just work.
+>
+> All tools are built Bun-first (with Node.js support) because I believe in embracing modern JavaScript runtimes.
+
+## ⚡ Key Features
+
+- **Framework Agnostic**: Works with any framework - Express, Fastify, Hono, or no framework at all
+- **Zero Configuration**: Start using immediately with sensible defaults
+- **Highly Performant**: Built with performance in mind
+- **TypeScript First**: Full type safety out of the box
+- **Mix and Match**: Use only what you need - each tool works independently
 
 ## 🛠️ Available Tools
 
 ### 📝 Logger (@sueno/logger)
 
-A powerful logging utility built on top of pino with:
+Simple logging that just works:
 
-- Fancy console output
-- Request duration tracking
-- TypeScript support
-- Configurable output formats
+```typescript
+import { logger } from '@sueno/logger';
+// That's it! Start logging:
+logger.info('Ready to go!');
+```
+
+- Pretty console output out of the box
+- Production-ready when you need it
+- Zero configuration needed (but customizable if you want)
+- Works with any Node.js/Bun framework
 
 ### 🔄 Cache (@sueno/cache) [Coming Soon]
 
-Fast and flexible caching solution with:
+Straightforward caching:
 
-- In-memory caching
-- Redis integration
-- Type-safe cache operations
-- Automatic cache invalidation
+```typescript
+import { cache } from '@sueno/cache';
+// Simple as that:
+await cache.set('key', value);
+```
+
+- Works instantly with in-memory storage
+- Redis support without configuration hell
+- Type-safe by default
+- Framework independent implementation
 
 ### 👷 Worker (@sueno/worker) [Coming Soon]
 
-Robust worker and queue management system:
+Background jobs made simple:
 
-- Job queues with priorities
-- Delayed job processing
-- Worker pools
-- Job retry mechanisms
-- Progress tracking
-- Redis-backed persistence
+```typescript
+import { worker } from '@sueno/worker';
+// Just add your job:
+await worker.add('email', { to: 'user@example.com' });
+```
+
+- Built on BullMQ but without the setup complexity
+- Sensible defaults that work for most cases
+- Persistent storage included
+- Use with any application structure
+
+### 📁 Storage (@sueno/storage) [Coming Soon]
+
+Simple MinIO/S3 file handling:
+
+```typescript
+import { storage } from '@sueno/storage';
+// Upload files easily:
+await storage.upload('avatar.png', fileBuffer);
+```
 
 ## 📦 Installation
 
-Each tool can be installed separately:
-
 ```bash
-# Install logger
+# Pick what you need:
 bun add @sueno/logger
-
-# Install cache (coming soon)
-bun add @sueno/cache
-
-# Install worker (coming soon)
-bun add @sueno/worker
+bun add @sueno/cache    # coming soon
+bun add @sueno/worker   # coming soon
+bun add @sueno/storage  # coming soon
 ```
+
+## 💡 Philosophy
+
+- **Zero Config**: Everything works out of the box
+- **Bun First**: Optimized for Bun.js, but works with Node.js
+- **Type Safety**: Full TypeScript support without the hassle
+- **Just Works**: Sensible defaults over complex configurations
+- **Developer Focused**: Built by developers, for developers
+- **Framework Independence**: No lock-in to specific frameworks or architectures
 
 ## 📜 License
 
@@ -54,8 +98,12 @@ Apache 2.0
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our contributing guide for details.
+Found a way to make it even simpler? We'd love to hear it! Contributions welcome.
+
+## 📱 Contact
+
+Have questions? Reach out to me on Telegram: [@klimetzc](https://t.me/klimetzc)
 
 ---
 
-Built with ❤️ for the Bun.js community
+Built by developers who value their time 🚀
