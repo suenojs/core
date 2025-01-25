@@ -4,6 +4,8 @@ A flexible and type-safe logging library that supports both console and Pino-bas
 
 ## Features
 
+- Simple import and use with default logger
+- Hooks for custom logging behavior
 - Type-safe logger names with generics
 - Beautiful console output with colors
 - Optional Pino integration for production logging
@@ -20,20 +22,41 @@ npm install @sueno/logger
 
 ## Usage
 
-### Basic Usage
+### Simple Usage
+
+```typescript
+// Simple usage
+import { logger } from '@sueno/logger';
+logger.info('Hello!');
+
+// Advanced usage
+import { configure } from '@sueno/logger';
+configure({
+  level: 'debug',
+  transport: customTransport,
+  hooks: {
+    onError: async (error) => {
+      await notify(error);
+    },
+  },
+  // ... many more options for power users
+});
+```
+
+### Custom Logger Instance
 
 ```typescript
 import { createLogger } from '@sueno/logger';
 
-// Create a default logger (name: ROOT)
-const logger = createLogger();
-
-// Create a typed logger with a specific name
-const featureLogger = createLogger<'feature-1'>({ name: 'feature-1' });
-
-// Log messages
-logger.info('Application started');
-featureLogger.debug('Debug message from feature');
+const customLogger = createLogger({
+  name: 'my-service',
+  level: 'debug',
+  hooks: {
+    onLog: async (level, message, data) => {
+      await customLogHandler(level, message, data);
+    },
+  },
+});
 ```
 
 ### Configuration Options

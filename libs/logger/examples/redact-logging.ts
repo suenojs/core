@@ -1,7 +1,7 @@
-import { createLogger } from '../src';
+import { logger, configure } from '../src';
 
-// Create a logger with redaction settings
-const secureLogger = createLogger({
+// Configure logger with redaction settings
+configure({
   name: 'SecureLogger',
   redact: {
     paths: ['password', 'creditCard', 'ssn', '*.secret', 'user.email'],
@@ -10,7 +10,7 @@ const secureLogger = createLogger({
 });
 
 // Example 1: Basic redaction of sensitive fields
-secureLogger.info('User login attempt', {
+logger.info('User login attempt', {
   username: 'john.doe',
   password: 'supersecret123', // Will be redacted
   metadata: {
@@ -20,7 +20,7 @@ secureLogger.info('User login attempt', {
 });
 
 // Example 2: Nested object redaction
-secureLogger.info('Payment processed', {
+logger.info('Payment processed', {
   user: {
     name: 'John Doe',
     email: 'john@example.com', // Will be redacted due to user.email pattern
@@ -30,7 +30,7 @@ secureLogger.info('Payment processed', {
 });
 
 // Example 3: Array with sensitive data
-secureLogger.info('Batch user processing', {
+logger.info('Batch user processing', {
   users: [
     {
       name: 'Alice',

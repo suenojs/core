@@ -1,7 +1,7 @@
-import { createLogger } from '../src';
+import { logger, configure } from '../src';
 
-// Create a logger for group examples
-const logger = createLogger({
+// Configure logger for group examples
+configure({
   name: 'GroupLogger',
 });
 

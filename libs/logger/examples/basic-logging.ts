@@ -1,28 +1,33 @@
-import { createLogger } from '../src';
+import { logger, configure } from '../src';
 
-// Basic logger with different time formats
-const loggerIso = createLogger({
+// Configure default logger with different time formats
+configure({
   name: 'IsoTime',
   timeFormat: 'iso',
 });
 
-const loggerEpoch = createLogger({
+logger.info('Using ISO time format');
+
+// Reconfigure with epoch time
+configure({
   name: 'EpochTime',
   timeFormat: 'epoch',
 });
 
-const loggerUnix = createLogger({
+logger.info('Using Epoch time format');
+
+// Reconfigure with unix time
+configure({
   name: 'UnixTime',
   timeFormat: 'unix',
 });
 
-const loggerNoTime = createLogger({
+logger.info('Using Unix time format');
+
+// Disable time display
+configure({
   name: 'NoTime',
   time: false,
 });
 
-// Demonstrate different time formats
-loggerIso.info('Using ISO time format');
-loggerEpoch.info('Using Epoch time format');
-loggerUnix.info('Using Unix time format');
-loggerNoTime.info('No time displayed');
+logger.info('No time displayed');

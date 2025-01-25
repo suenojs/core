@@ -1,4 +1,4 @@
-import { LogLevel, LogOptions, SuenoLoggerOptions, Transport, TimeFormat } from './types';
+import { LogLevel, LogOptions, SuenoLoggerOptions, Transport, TimeFormat, LogHooks } from './types';
 import { formatTime, formatMessage } from './formatters';
 import { createTransport } from './transports';
 import { LogGroup } from './log-group';
@@ -13,6 +13,7 @@ export class SuenoLogger<T extends string = 'ROOT'> {
   private timeFormat: TimeFormat;
   private transport?: Transport;
   private redact?: ReturnType<typeof fastRedact>;
+  private hooks?: LogHooks;
 
   private readonly LOG_LEVELS: Record<LogLevel, number> = {
     debug: 0,
@@ -40,6 +41,8 @@ export class SuenoLogger<T extends string = 'ROOT'> {
         strict: options.redact.strict,
       });
     }
+
+    this.hooks = options.hooks;
   }
 
   private shouldLog(messageLevel: LogLevel): boolean {
@@ -64,11 +67,11 @@ export class SuenoLogger<T extends string = 'ROOT'> {
     return JSON.parse(this.redact(data));
   }
 
-  debug(
+  async debug(
     message: string,
     data?: Record<string, any>,
     options?: LogOptions & { indent?: number }
-  ): void {
+  ): Promise<void> {
     if (this.shouldLog('debug')) {
       const time = formatTime(this.timeFormat, this.time);
       const redactedData = this.processData(data);
@@ -76,14 +79,15 @@ export class SuenoLogger<T extends string = 'ROOT'> {
         formatMessage('DEBUG', message, this.name, time, this.useAscii, redactedData, options)
       );
       this.writeToTransport('debug', message, data, options);
+      await this.hooks?.onLog?.('debug', message, redactedData);
     }
   }
 
-  info(
+  async info(
     message: string,
     data?: Record<string, any>,
     options?: LogOptions & { indent?: number }
-  ): void {
+  ): Promise<void> {
     if (this.shouldLog('info')) {
       const time = formatTime(this.timeFormat, this.time);
       const redactedData = this.processData(data);
@@ -91,14 +95,15 @@ export class SuenoLogger<T extends string = 'ROOT'> {
         formatMessage('INFO', message, this.name, time, this.useAscii, redactedData, options)
       );
       this.writeToTransport('info', message, data, options);
+      await this.hooks?.onLog?.('info', message, redactedData);
     }
   }
 
-  warn(
+  async warn(
     message: string,
     data?: Record<string, any>,
     options?: LogOptions & { indent?: number }
-  ): void {
+  ): Promise<void> {
     if (this.shouldLog('warn')) {
       const time = formatTime(this.timeFormat, this.time);
       const redactedData = this.processData(data);
@@ -106,14 +111,15 @@ export class SuenoLogger<T extends string = 'ROOT'> {
         formatMessage('WARN', message, this.name, time, this.useAscii, redactedData, options)
       );
       this.writeToTransport('warn', message, data, options);
+      await this.hooks?.onLog?.('warn', message, redactedData);
     }
   }
 
-  error(
+  async error(
     message: string,
     data?: Record<string, any>,
     options?: LogOptions & { indent?: number }
-  ): void {
+  ): Promise<void> {
     if (this.shouldLog('error')) {
       const time = formatTime(this.timeFormat, this.time);
       const redactedData = this.processData(data);
@@ -121,6 +127,10 @@ export class SuenoLogger<T extends string = 'ROOT'> {
         formatMessage('ERROR', message, this.name, time, this.useAscii, redactedData, options)
       );
       this.writeToTransport('error', message, data, options);
+      await this.hooks?.onLog?.('error', message, redactedData);
+      if (data instanceof Error) {
+        await this.hooks?.onError?.(data, redactedData);
+      }
     }
   }
 
@@ -129,13 +139,13 @@ export class SuenoLogger<T extends string = 'ROOT'> {
   }
 
   // Helper method for HTTP requests
-  request(
+  async request(
     method: string,
     path: string,
     status: number,
     data?: Record<string, any>,
     options: LogOptions = {}
-  ): void {
+  ): Promise<void> {
     const level = status >= 400 ? 'error' : 'info';
     const requestOptions = {
       ...options,
@@ -158,16 +168,17 @@ export class SuenoLogger<T extends string = 'ROOT'> {
         )
       );
       this.writeToTransport(level as LogLevel, 'HTTP Request', data, requestOptions);
+      await this.hooks?.onRequest?.(method, path, status, data);
     }
   }
 
   // Helper method for system status
-  system(
+  async system(
     status: number,
     message: string,
     data?: Record<string, any>,
     options: LogOptions = {}
-  ): void {
+  ): Promise<void> {
     const level = status >= 400 ? 'error' : 'info';
     const systemOptions = {
       ...options,
@@ -188,6 +199,7 @@ export class SuenoLogger<T extends string = 'ROOT'> {
         )
       );
       this.writeToTransport(level as LogLevel, message, data, systemOptions);
+      await this.hooks?.onSystem?.(status, message, data);
     }
   }
 

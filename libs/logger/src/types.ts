@@ -20,6 +20,18 @@ export interface LogOptions {
   isLastInGroup?: boolean;
 }
 
+export interface LogHooks {
+  onLog?: (level: LogLevel, message: string, data?: Record<string, any>) => void | Promise<void>;
+  onError?: (error: Error, data?: Record<string, any>) => void | Promise<void>;
+  onRequest?: (
+    method: string,
+    path: string,
+    status: number,
+    data?: Record<string, any>
+  ) => void | Promise<void>;
+  onSystem?: (status: number, message: string, data?: Record<string, any>) => void | Promise<void>;
+}
+
 export interface SuenoLoggerOptions {
   name?: string;
   level?: LogLevel;
@@ -29,6 +41,7 @@ export interface SuenoLoggerOptions {
   timeFormat?: TimeFormat;
   transport?: TransportConfig;
   redact?: RedactOptions;
+  hooks?: LogHooks;
 }
 
 export interface Transport {

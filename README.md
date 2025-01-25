@@ -15,6 +15,7 @@
 - **Highly Performant**: Built with performance in mind
 - **TypeScript First**: Full type safety out of the box
 - **Mix and Match**: Use only what you need - each tool works independently
+- **Progressive Complexity**: Easy to start, powerful when you need more
 
 ## 🛠️ Available Tools
 
@@ -91,6 +92,37 @@ bun add @sueno/storage  # coming soon
 - **Just Works**: Sensible defaults over complex configurations
 - **Developer Focused**: Built by developers, for developers
 - **Framework Independence**: No lock-in to specific frameworks or architectures
+- **Easy to Learn, Hard to Master**: Start simple, scale with power features
+
+## 🎯 Progressive Power
+
+While Sueno is designed to work out of the box, each tool provides rich APIs and configuration options for power users:
+
+```typescript
+// Simple usage
+import { logger } from '@sueno/logger';
+logger.info('Hello!');
+
+// Advanced usage
+import { createLogger } from '@sueno/logger';
+const logger = createLogger({
+  level: 'debug',
+  transport: customTransport,
+  hooks: {
+    onError: async (error) => {
+      await notify(error);
+    },
+  },
+  // ... many more options for power users
+});
+```
+
+Each tool follows this philosophy - zero config to start, but with a rich ecosystem of features when you need them:
+
+- **Logger**: Custom transports, hooks, formatting
+- **Cache**: Advanced invalidation strategies, custom stores
+- **Worker**: Complex job orchestration, custom processors
+- **Storage**: Custom providers, advanced file processing
 
 ## 📜 License
 
