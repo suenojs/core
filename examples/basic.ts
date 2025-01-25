@@ -83,30 +83,24 @@ nestedRouter.get('/hello', (ctx) => {
   return `Nested route for ID: ${ctx.params.id}`;
 });
 
+const deepNestedRouter = new Sueno({
+  baseUrl: '/deep/nested/:nid',
+  logLevel: 'debug',
+});
+
+deepNestedRouter.get('/hello', (ctx) => {
+  return `Deep nested route for ID: ${ctx.params.nid} + ${ctx.params.id}`;
+});
+
+nestedRouter.route(deepNestedRouter);
+
 // Mount routers
 app.route(usersRouter);
 app.route(healthRouter);
 app.route(nestedRouter);
+app.route(deepNestedRouter);
 
 // Start the server
 app.serve({ port: 3000 }, (options) => {
-  console.log(`OPTIONS ${options.hostname}:${options.port}`);
+  console.log(`Started ${options.hostname}:${options.port}`);
 });
-
-// This will create the following routes:
-// GET /api/hello
-// GET /api/users
-// GET /api/users/:id
-// GET /api/health
-
-// Example API client usage
-// const api = createSuenoApi(
-//   {
-//     baseUrl: 'http://localhost:3000',
-//   },
-//   app
-// );
-
-// api.get('/hello/json').then((res) => {
-//   console.log(res);
-// });

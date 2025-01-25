@@ -426,6 +426,11 @@ export class Sueno {
       this.logger.system(Number(HttpStatus.OK), `Server running at http://${hostname}:${port}`);
     }
 
+    // Call the callback if provided
+    if (callback) {
+      callback({ port, hostname, development });
+    }
+
     return server;
   }
 }
