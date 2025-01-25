@@ -1,35 +1,53 @@
 import { Sueno } from '../src';
-import { csrf } from '../src';
-import { createRouter } from '../src';
-import { HttpStatus } from '../src/types/http';
-import type { BaseContext } from '../src/types/context';
-import type { NextFunction } from '../src/types/middleware';
 
-// Example usage
+// Create main app with base URL
 const app = new Sueno({
   logger: true,
   trustProxy: true,
+  baseUrl: '/api',
+  logLevel: 'debug',
 });
 
-// Add CSRF protection middleware globally
-app.use(
-  csrf({
-    cookie: {
-      secure: process.env.NODE_ENV === 'production', // Only use secure in production
-    },
-  })
-);
+// Create a users router
+const usersRouter = new Sueno({
+  baseUrl: '/users',
+  logLevel: 'debug',
+});
 
-app.use((ctx: BaseContext, next: NextFunction) => {
-  ctx.logger.info('Global middleware');
+// Add routes to users router
+usersRouter.get('/', (ctx) => {
+  ctx.logger.info('Accessing users list');
+  return { users: ['user1', 'user2'] };
+});
+
+usersRouter.get('/:id', (ctx) => {
+  ctx.logger.info(`Accessing user ${ctx.params.id}`);
+  return { userId: ctx.params.id };
+});
+
+// Create a health router
+const healthRouter = new Sueno({
+  baseUrl: '/health',
+  logLevel: 'debug',
+});
+
+// Add routes to health router
+healthRouter.get('/', (ctx) => {
+  ctx.logger.info('Health check requested');
+  return { status: 'ok', time: new Date().toISOString() };
+});
+
+// Add middleware to main app
+app.use((ctx, next) => {
+  ctx.logger.info(`Incoming request to ${ctx.path}`);
   ctx.state.testData = 'test';
   return next();
 });
 
-// Update example route handlers with explicit types
+// Add basic routes to main app
 app.get('/hello', (ctx) => {
+  // ctx. - should see available fields for ctx
   ctx.logger.info(`State: ${ctx.state.testData}`);
-  ctx.status = HttpStatus.MOVED_PERMANENTLY;
   return 'Hello World!';
 });
 
@@ -50,40 +68,36 @@ app.get('/hello/:id', (ctx) => {
   return `Hello ${ctx.params.id}!`;
 });
 
-app.get('/users/:userId/posts/:postId', (ctx) => {
-  ctx.logger.info(`Looking up post for user`);
-  ctx.logger.debug(`User ID: ${ctx.params.userId}, Post ID: ${ctx.params.postId}`);
-  return `User ${ctx.params.userId}, Post ${ctx.params.postId}`;
+// app.get('/users/:userId/posts/:postId', (ctx) => {
+//   ctx.logger.info(`Looking up post for user`);
+//   ctx.logger.debug(`User ID: ${ctx.params.userId}, Post ID: ${ctx.params.postId}`);
+//   return `User ${ctx.params.userId}, Post ${ctx.params.postId}`;
+// });
+
+const nestedRouter = new Sueno({
+  baseUrl: '/nested/:id',
+  logLevel: 'debug',
 });
 
-const someRouter = createRouter('/some/router');
-someRouter.use((ctx, next) => {
-  ctx.logger.info('Some Router Middleware');
-  return next();
+nestedRouter.get('/hello', (ctx) => {
+  return `Nested route for ID: ${ctx.params.id}`;
 });
 
-someRouter.get('/hello', async (ctx) => {
-  return 'Hello from Some Router!';
-});
-
-someRouter.get('/sleep', async (ctx) => {
-  const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-  await sleep(1000);
-  return { message: 'Hello from Some Router!' };
-});
-
-app.route(someRouter);
+// Mount routers
+app.route(usersRouter);
+app.route(healthRouter);
+app.route(nestedRouter);
 
 // Start the server
-app.serve(
-  {
-    port: 3000,
-    development: true,
-  },
-  (options) => {
-    console.log(`Server started on http://${options.hostname}:${options.port}`);
-  }
-);
+app.serve({ port: 3000 }, (options) => {
+  console.log(`OPTIONS ${options.hostname}:${options.port}`);
+});
+
+// This will create the following routes:
+// GET /api/hello
+// GET /api/users
+// GET /api/users/:id
+// GET /api/health
 
 // Example API client usage
 // const api = createSuenoApi(

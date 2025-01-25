@@ -13,13 +13,16 @@
     "access": "public"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/ioredis": "^5.0.0"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "dependencies": {
     "chalk": "^5.4.1",
-    "pino": "^9.6.0"
+    "ioredis": "^5.3.2",
+    "pino": "^9.6.0",
+    "zod": "^3.24.1"
   }
 }
