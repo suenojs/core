@@ -43,7 +43,7 @@ export function formatMessage(
   time: string,
   useAscii: boolean,
   data?: Record<string, any>,
-  options?: LogOptions & { indent?: number; isLastInGroup?: boolean }
+  options?: LogOptions & { indent?: number; isLastInGroup?: boolean },
 ): string {
   const baseIndent = Math.max(0, Math.floor((options?.indent || 0) / 2));
 
@@ -59,8 +59,8 @@ export function formatMessage(
           ? '|   '.repeat(baseIndent - 1) + '`-- ' // Use closing branch for last entry
           : '|   '.repeat(baseIndent - 1) + '|-- '
         : options?.isLastInGroup
-        ? '│ '.repeat(baseIndent - 1) + '╰─ ' // Use closing branch for last entry
-        : '│ '.repeat(baseIndent - 1) + '├─ '
+          ? '│ '.repeat(baseIndent - 1) + '╰─ ' // Use closing branch for last entry
+          : '│ '.repeat(baseIndent - 1) + '├─ '
       : '';
   }
 
@@ -81,17 +81,17 @@ export function formatMessage(
     switch (levelUpper.trim()) {
       case 'ERROR':
         formattedMessage = `${logPrefix}${prefix}${timeStr}${chalk.redBright(
-          `[${levelUpper}]`
+          `[${levelUpper}]`,
         )} ${chalk.cyan(name)}: ${chalk.redBright(message)}`;
         break;
       case 'WARN':
         formattedMessage = `${logPrefix}${prefix}${timeStr}[${chalk.yellowBright(
-          levelUpper
+          levelUpper,
         )}] ${chalk.cyan(name)}: ${chalk.yellowBright(message)}`;
         break;
       default:
         formattedMessage = `${logPrefix}${prefix}${timeStr}[${getLevelColor(
-          levelUpper
+          levelUpper,
         )}] ${chalk.cyan(name)}: ${message}`;
     }
   }
@@ -108,8 +108,8 @@ export function formatMessage(
           levelUpper.trim() === 'ERROR'
             ? chalk.redBright(line)
             : levelUpper.trim() === 'WARN'
-            ? chalk.yellowBright(line)
-            : chalk.gray(line);
+              ? chalk.yellowBright(line)
+              : chalk.gray(line);
         return `${dataIndent}${dataPrefix}${coloredLine}`;
       })
       .join('\n');

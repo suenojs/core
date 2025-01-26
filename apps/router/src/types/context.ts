@@ -45,7 +45,7 @@ export class BaseContextImpl<Path extends string = string> implements HandlerCon
     public readonly query: URLSearchParams,
     public readonly path: string,
     public openapi: OpenAPIDocument,
-    public cache: CacheContext['cache']
+    public cache: CacheContext['cache'],
   ) {}
 
   setStatus(code: HttpStatus): this {

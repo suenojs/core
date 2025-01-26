@@ -99,5 +99,5 @@ export interface CorsOptions {
 export type ExtractParams<T> = T extends `${string}:${infer Param}/${infer Rest}`
   ? { [K in Param]: string } & ExtractParams<Rest>
   : T extends `${string}:${infer Param}`
-  ? { [K in Param]: string }
-  : {};
+    ? { [K in Param]: string }
+    : Record<string, never>;

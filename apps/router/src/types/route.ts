@@ -6,8 +6,8 @@ import type { MiddlewareHandler, RouteMiddlewareHandler } from './middleware';
 export type ExtractPathParams<T extends string> = T extends `${string}:${infer Param}/${infer Rest}`
   ? { [K in Param]: string } & ExtractPathParams<Rest>
   : T extends `${string}:${infer Param}`
-  ? { [K in Param]: string }
-  : Record<string, string>;
+    ? { [K in Param]: string }
+    : Record<string, string>;
 
 // Handler context type
 export type HandlerContext<Path extends string> = BaseContext & {
@@ -16,7 +16,7 @@ export type HandlerContext<Path extends string> = BaseContext & {
 
 // Route handler type that infers path parameters from the path string
 export type RouteHandler<Path extends string = string> = (
-  ctx: HandlerContext<Path>
+  ctx: HandlerContext<Path>,
 ) => Promise<any> | any;
 
 export interface RouteInfo<Path extends string = string> {

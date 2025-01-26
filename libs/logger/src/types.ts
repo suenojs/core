@@ -29,7 +29,7 @@ export interface LogHooks {
     method: string,
     path: string,
     status: number,
-    data?: Record<string, any>
+    data?: Record<string, any>,
   ) => void | Promise<void>;
   onSystem?: (status: number, message: string, data?: Record<string, any>) => void | Promise<void>;
 }
@@ -73,13 +73,13 @@ export interface SuenoLogger<T extends string = 'ROOT'> {
     path: string,
     status: number,
     data?: Record<string, any>,
-    options?: LogOptions
+    options?: LogOptions,
   ): Promise<void>;
   system(
     status: number,
     message: string,
     data?: Record<string, any>,
-    options?: LogOptions
+    options?: LogOptions,
   ): Promise<void>;
   setLevel(level: LogLevel): void;
   setTraceId(traceId: string): void;

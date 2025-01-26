@@ -141,8 +141,8 @@ export class Sueno {
     path: Path,
     handlers: [
       ...Array<MiddlewareHandler | RouteMiddlewareHandler<Path>>,
-      (ctx: HandlerContext<Path>) => Promise<any> | any
-    ]
+      (ctx: HandlerContext<Path>) => Promise<any> | any,
+    ],
   ) {
     if (!this.routes.has(method)) {
       this.routes.set(method, new Map());
@@ -168,7 +168,7 @@ export class Sueno {
 
   private matchRoute<TPath extends string>(
     method: string,
-    path: TPath
+    path: TPath,
   ): {
     handler: RouteHandler<TPath>;
     params: Record<string, string>;
@@ -208,13 +208,13 @@ export class Sueno {
   // Update route handlers with generic context support
   get<Path extends string>(
     path: Path,
-    handler: (ctx: HandlerContext<Path>) => Promise<any> | any
+    handler: (ctx: HandlerContext<Path>) => Promise<any> | any,
   ): this;
   get<Path extends string>(
     path: Path,
     ...handlers: [
       ...Array<MiddlewareHandler | RouteMiddlewareHandler<Path>>,
-      (ctx: HandlerContext<Path>) => Promise<any> | any
+      (ctx: HandlerContext<Path>) => Promise<any> | any,
     ]
   ): this {
     this.addRoute('GET', path, handlers);
@@ -223,13 +223,13 @@ export class Sueno {
 
   post<Path extends string>(
     path: Path,
-    handler: (ctx: HandlerContext<Path>) => Promise<any> | any
+    handler: (ctx: HandlerContext<Path>) => Promise<any> | any,
   ): this;
   post<Path extends string>(
     path: Path,
     ...handlers: [
       ...Array<MiddlewareHandler | RouteMiddlewareHandler<Path>>,
-      (ctx: HandlerContext<Path>) => Promise<any> | any
+      (ctx: HandlerContext<Path>) => Promise<any> | any,
     ]
   ): this {
     this.addRoute('POST', path, handlers);
@@ -238,13 +238,13 @@ export class Sueno {
 
   put<Path extends string>(
     path: Path,
-    handler: (ctx: HandlerContext<Path>) => Promise<any> | any
+    handler: (ctx: HandlerContext<Path>) => Promise<any> | any,
   ): this;
   put<Path extends string>(
     path: Path,
     ...handlers: [
       ...Array<MiddlewareHandler | RouteMiddlewareHandler<Path>>,
-      (ctx: HandlerContext<Path>) => Promise<any> | any
+      (ctx: HandlerContext<Path>) => Promise<any> | any,
     ]
   ): this {
     this.addRoute('PUT', path, handlers);
@@ -253,13 +253,13 @@ export class Sueno {
 
   delete<Path extends string>(
     path: Path,
-    handler: (ctx: HandlerContext<Path>) => Promise<any> | any
+    handler: (ctx: HandlerContext<Path>) => Promise<any> | any,
   ): this;
   delete<Path extends string>(
     path: Path,
     ...handlers: [
       ...Array<MiddlewareHandler | RouteMiddlewareHandler<Path>>,
-      (ctx: HandlerContext<Path>) => Promise<any> | any
+      (ctx: HandlerContext<Path>) => Promise<any> | any,
     ]
   ): this {
     this.addRoute('DELETE', path, handlers);
@@ -305,7 +305,7 @@ export class Sueno {
         const fullPath = this.normalizePath(combinedPath);
 
         this.logger.debug(
-          `Mounting route from router: ${method} ${fullPath} (router base: ${router.basePath}, route: ${path})`
+          `Mounting route from router: ${method} ${fullPath} (router base: ${router.basePath}, route: ${path})`,
         );
 
         const { pattern, paramNames } = this.parseRoute(fullPath);
@@ -372,7 +372,7 @@ export class Sueno {
               set: async () => {},
               delete: async () => {},
               clear: async () => {},
-            }
+            },
           );
 
           try {
@@ -392,7 +392,7 @@ export class Sueno {
               {
                 status: Number(ctx.status),
                 headers: req.headers,
-              }
+              },
             );
 
             if (this.options.logger) {

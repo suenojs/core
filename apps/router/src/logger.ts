@@ -132,7 +132,7 @@ class SuenoLogger {
     method: string,
     path: string,
     status: number,
-    details?: string | Record<string, unknown>
+    details?: string | Record<string, unknown>,
   ): void {
     const level = status >= 400 ? 'error' : 'info';
     if (this.shouldLog(level as LogLevel)) {

@@ -61,7 +61,7 @@ export class SuenoLogger<T extends string = 'ROOT'> implements ISuenoLogger<T> {
     level: LogLevel,
     message: string,
     data?: Record<string, any>,
-    options?: LogOptions
+    options?: LogOptions,
   ): void {
     if (this.transport) {
       const redactedData = this.processData(data);
@@ -78,13 +78,13 @@ export class SuenoLogger<T extends string = 'ROOT'> implements ISuenoLogger<T> {
   async debug(
     message: string,
     data?: Record<string, any>,
-    options?: LogOptions & { indent?: number }
+    options?: LogOptions & { indent?: number },
   ): Promise<void> {
     if (this.shouldLog('debug')) {
       const time = formatTime(this.timeFormat, this.time);
       const redactedData = this.processData(data);
       console.log(
-        formatMessage('DEBUG', message, this.name, time, this.useAscii, redactedData, options)
+        formatMessage('DEBUG', message, this.name, time, this.useAscii, redactedData, options),
       );
       this.writeToTransport('debug', message, data, options);
       await this.hooks?.onLog?.('debug', message, redactedData);
@@ -94,13 +94,13 @@ export class SuenoLogger<T extends string = 'ROOT'> implements ISuenoLogger<T> {
   async info(
     message: string,
     data?: Record<string, any>,
-    options?: LogOptions & { indent?: number }
+    options?: LogOptions & { indent?: number },
   ): Promise<void> {
     if (this.shouldLog('info')) {
       const time = formatTime(this.timeFormat, this.time);
       const redactedData = this.processData(data);
       console.log(
-        formatMessage('INFO', message, this.name, time, this.useAscii, redactedData, options)
+        formatMessage('INFO', message, this.name, time, this.useAscii, redactedData, options),
       );
       this.writeToTransport('info', message, data, options);
       await this.hooks?.onLog?.('info', message, redactedData);
@@ -110,13 +110,13 @@ export class SuenoLogger<T extends string = 'ROOT'> implements ISuenoLogger<T> {
   async warn(
     message: string,
     data?: Record<string, any>,
-    options?: LogOptions & { indent?: number }
+    options?: LogOptions & { indent?: number },
   ): Promise<void> {
     if (this.shouldLog('warn')) {
       const time = formatTime(this.timeFormat, this.time);
       const redactedData = this.processData(data);
       console.warn(
-        formatMessage('WARN', message, this.name, time, this.useAscii, redactedData, options)
+        formatMessage('WARN', message, this.name, time, this.useAscii, redactedData, options),
       );
       this.writeToTransport('warn', message, data, options);
       await this.hooks?.onLog?.('warn', message, redactedData);
@@ -126,13 +126,13 @@ export class SuenoLogger<T extends string = 'ROOT'> implements ISuenoLogger<T> {
   async error(
     message: string,
     data?: Record<string, any>,
-    options?: LogOptions & { indent?: number }
+    options?: LogOptions & { indent?: number },
   ): Promise<void> {
     if (this.shouldLog('error')) {
       const time = formatTime(this.timeFormat, this.time);
       const redactedData = this.processData(data);
       console.error(
-        formatMessage('ERROR', message, this.name, time, this.useAscii, redactedData, options)
+        formatMessage('ERROR', message, this.name, time, this.useAscii, redactedData, options),
       );
       this.writeToTransport('error', message, data, options);
       await this.hooks?.onLog?.('error', message, redactedData);
@@ -152,7 +152,7 @@ export class SuenoLogger<T extends string = 'ROOT'> implements ISuenoLogger<T> {
     path: string,
     status: number,
     data?: Record<string, any>,
-    options: LogOptions = {}
+    options: LogOptions = {},
   ): Promise<void> {
     const level = status >= 400 ? 'error' : 'info';
     const requestOptions = {
@@ -172,8 +172,8 @@ export class SuenoLogger<T extends string = 'ROOT'> implements ISuenoLogger<T> {
           time,
           this.useAscii,
           data,
-          requestOptions
-        )
+          requestOptions,
+        ),
       );
       this.writeToTransport(level as LogLevel, 'HTTP Request', data, requestOptions);
       await this.hooks?.onRequest?.(method, path, status, data);
@@ -185,7 +185,7 @@ export class SuenoLogger<T extends string = 'ROOT'> implements ISuenoLogger<T> {
     status: number,
     message: string,
     data?: Record<string, any>,
-    options: LogOptions = {}
+    options: LogOptions = {},
   ): Promise<void> {
     const level = status >= 400 ? 'error' : 'info';
     const systemOptions = {
@@ -203,8 +203,8 @@ export class SuenoLogger<T extends string = 'ROOT'> implements ISuenoLogger<T> {
           time,
           this.useAscii,
           data,
-          systemOptions
-        )
+          systemOptions,
+        ),
       );
       this.writeToTransport(level as LogLevel, message, data, systemOptions);
       await this.hooks?.onSystem?.(status, message, data);

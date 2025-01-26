@@ -28,7 +28,7 @@ export class LogGroup<T extends string> {
     level: LogLevel,
     message: string,
     data?: Record<string, any>,
-    options?: LogOptions
+    options?: LogOptions,
   ): void {
     // If there's a stored last message, log it first
     if (this.lastMessage) {

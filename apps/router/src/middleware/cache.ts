@@ -10,7 +10,7 @@ declare module '../types/context' {
 
 export function createCacheMiddleware(
   config: CacheConfig,
-  typeConfigs: CacheTypeConfig<any>[] = []
+  typeConfigs: CacheTypeConfig<any>[] = [],
 ) {
   let store: CacheStore;
 
@@ -23,7 +23,7 @@ export function createCacheMiddleware(
         config.store.host,
         config.store.port,
         config.store.password,
-        config.store.db
+        config.store.db,
       );
       break;
     default:

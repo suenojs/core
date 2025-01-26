@@ -26,7 +26,7 @@ export const addHooks = (hooks: LogHooks): void => {
 
 // Keep createLogger for custom instances
 export const createLogger = <T extends string = 'ROOT'>(
-  options?: SuenoLoggerOptions
+  options?: SuenoLoggerOptions,
 ): SuenoLogger<T> => {
   return new SuenoLogger<T>(options);
 };

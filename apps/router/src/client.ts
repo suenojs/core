@@ -4,8 +4,8 @@ import type { RouteContext } from './index';
 type RouteParams<T extends string> = T extends `${infer Start}:${infer Param}/${infer Rest}`
   ? { [K in Param | keyof RouteParams<Rest>]: string }
   : T extends `${infer Start}:${infer Param}`
-  ? { [K in Param]: string }
-  : {};
+    ? { [K in Param]: string }
+    : Record<string, never>;
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
@@ -13,8 +13,8 @@ type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 type HandlerReturnType<T> = T extends (ctx: any) => Promise<infer R>
   ? R
   : T extends (ctx: any) => infer R
-  ? R
-  : never;
+    ? R
+    : never;
 
 interface RouteInfo<T = any> {
   pattern: RegExp;
@@ -23,7 +23,7 @@ interface RouteInfo<T = any> {
 }
 
 type RouteHandler<TParams = Record<string, string>, TReturn = any> = (
-  ctx: RouteContext<TParams>
+  ctx: RouteContext<TParams>,
 ) => Promise<TReturn> | TReturn;
 
 type ExtractRoutes<T> = T extends {
@@ -69,7 +69,7 @@ class SuenoApiClient<TApp> {
     method: HttpMethod,
     path: string & keyof ExtractRoutes<TApp>[typeof method],
     body?: any,
-    params?: Record<string, string>
+    params?: Record<string, string>,
   ): Promise<ApiResponse<T>> {
     let url = path;
     if (params) {
@@ -101,7 +101,7 @@ class SuenoApiClient<TApp> {
 
   get<TPath extends string & keyof ExtractRoutes<TApp>['GET']>(
     path: TPath,
-    params?: RouteParams<TPath>
+    params?: RouteParams<TPath>,
   ): Promise<ApiResponse<ExtractRoutes<TApp>['GET'][TPath]>> {
     return this.request('GET', path, undefined, params);
   }
@@ -109,7 +109,7 @@ class SuenoApiClient<TApp> {
   post<TPath extends string & keyof ExtractRoutes<TApp>['POST'], TBody = any>(
     path: TPath,
     body: TBody,
-    params?: RouteParams<TPath>
+    params?: RouteParams<TPath>,
   ): Promise<ApiResponse<ExtractRoutes<TApp>['POST'][TPath]>> {
     return this.request('POST', path, body, params);
   }
@@ -117,14 +117,14 @@ class SuenoApiClient<TApp> {
   put<TPath extends string & keyof ExtractRoutes<TApp>['PUT'], TBody = any>(
     path: TPath,
     body: TBody,
-    params?: RouteParams<TPath>
+    params?: RouteParams<TPath>,
   ): Promise<ApiResponse<ExtractRoutes<TApp>['PUT'][TPath]>> {
     return this.request('PUT', path, body, params);
   }
 
   delete<TPath extends string & keyof ExtractRoutes<TApp>['DELETE']>(
     path: TPath,
-    params?: RouteParams<TPath>
+    params?: RouteParams<TPath>,
   ): Promise<ApiResponse<ExtractRoutes<TApp>['DELETE'][TPath]>> {
     return this.request('DELETE', path, undefined, params);
   }

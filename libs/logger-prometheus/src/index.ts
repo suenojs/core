@@ -1,5 +1,5 @@
 import type { LogLevel, LogOptions, LoggerPlugin } from '@sueno/logger';
-import { Registry, Counter, Histogram } from 'prom-client';
+import { Registry, Counter, Histogram, collectDefaultMetrics } from 'prom-client';
 
 export interface PrometheusPluginOptions {
   prefix?: string;
@@ -59,7 +59,7 @@ export class PrometheusPlugin implements LoggerPlugin {
     this.loggerName = logger.name || 'default';
 
     if (this.options.collectDefaultMetrics) {
-      require('prom-client').collectDefaultMetrics({
+      collectDefaultMetrics({
         prefix: this.options.prefix,
         register: this.registry,
       });
@@ -75,7 +75,7 @@ export class PrometheusPlugin implements LoggerPlugin {
       if (data?.duration) {
         this.requestDuration.observe(
           { method, path, status: status.toString() },
-          data.duration / 1000 // Convert to seconds
+          data.duration / 1000, // Convert to seconds
         );
       }
     },

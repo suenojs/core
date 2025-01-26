@@ -18,7 +18,7 @@ declare module '../types/context' {
 interface RequestValidationOptions<
   B extends z.ZodType | undefined = undefined,
   Q extends z.ZodType | undefined = undefined,
-  P extends z.ZodType | undefined = undefined
+  P extends z.ZodType | undefined = undefined,
 > {
   body?: B;
   query?: Q;
@@ -29,7 +29,7 @@ interface RequestValidationOptions<
 type ValidatedContext<
   B extends z.ZodType | undefined,
   Q extends z.ZodType | undefined,
-  P extends z.ZodType | undefined
+  P extends z.ZodType | undefined,
 > = {
   validatedBody: B extends z.ZodType ? z.infer<B> : null;
   validatedQuery: Q extends z.ZodType ? z.infer<Q> : null;
@@ -39,7 +39,7 @@ type ValidatedContext<
 export function request<
   B extends z.ZodType | undefined = undefined,
   Q extends z.ZodType | undefined = undefined,
-  P extends z.ZodType | undefined = undefined
+  P extends z.ZodType | undefined = undefined,
 >(options: RequestValidationOptions<B, Q, P>): OpenAPIMiddleware {
   const middleware: OpenAPIMiddleware = async (ctx, next) => {
     const validationErrors: string[] = [];
@@ -99,7 +99,7 @@ export function request<
 export function response(
   statusCode: number | HttpStatus,
   schema: z.ZodType,
-  description?: string
+  description?: string,
 ): OpenAPIMiddleware {
   const middleware: OpenAPIMiddleware = async (ctx, next) => {
     await next();
@@ -191,17 +191,20 @@ export function openapi(options: OpenAPIOptions): MiddlewareHandler {
           description: metadata.requestBody.description,
         },
       }),
-      responses: Object.entries(metadata.responses).reduce((acc, [status, response]) => {
-        acc[status] = {
-          description: response.description || 'No description provided',
-          content: {
-            'application/json': {
-              schema: response.schema,
+      responses: Object.entries(metadata.responses).reduce(
+        (acc, [status, response]) => {
+          acc[status] = {
+            description: response.description || 'No description provided',
+            content: {
+              'application/json': {
+                schema: response.schema,
+              },
             },
-          },
-        };
-        return acc;
-      }, {} as Record<string, any>),
+          };
+          return acc;
+        },
+        {} as Record<string, any>,
+      ),
     };
 
     await next();
