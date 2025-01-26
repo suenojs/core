@@ -98,6 +98,17 @@ logger.setLevel('debug');
 logger.setTraceId('new-trace-id');
 ```
 
+## Plugins ideas
+
+- Prometheus
+- Http, send logs to a http endpoint
+- Slack or telegram, send logs to a slack or telegram channel
+- Sentry, send logs to a sentry instance
+- Datadog, send logs to a datadog instance
+- AWS CloudWatch, send logs to a AWS CloudWatch instance
+- Azure App Insights, send logs to a Azure App Insights instance
+- Elasticsearch, send logs to a Elasticsearch instance
+
 ## Log Levels
 
 - `debug`: Detailed information for debugging
