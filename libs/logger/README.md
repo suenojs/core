@@ -124,4 +124,4 @@ logger.setTraceId('new-trace-id');
 
 ## License
 
-MIT
+Apache 2.0

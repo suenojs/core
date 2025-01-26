@@ -65,4 +65,4 @@ logger.error('Something went wrong', new Error('Database connection failed'));
 
 ## License
 
-MIT
+Apache 2.0
