@@ -1,7 +1,7 @@
 {
-  "name": "@sueno/logger",
+  "name": "@sueno/logger-prometheus",
   "version": "0.1.0",
-  "description": "Flexible and type-safe logging library for Sueno",
+  "description": "Prometheus plugin for @sueno/logger",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -9,16 +9,16 @@
     "test": "bun test"
   },
   "dependencies": {
-    "chalk": "^4.1.2",
-    "fast-redact": "^3.5.0",
-    "pino": "^8.0.0"
+    "prom-client": "^14.0.0"
+  },
+  "peerDependencies": {
+    "@sueno/logger": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
     "typescript": "^5.0.0",
+    "@types/express": "^4.17.21",
+    "express": "^4.18.2",
     "bun-types": "latest"
-  },
-  "engines": {
-    "node": ">=16.0.0"
   }
 }

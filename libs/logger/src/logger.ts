@@ -1,10 +1,18 @@
-import { LogLevel, LogOptions, SuenoLoggerOptions, Transport, TimeFormat, LogHooks } from './types';
+import {
+  LogLevel,
+  LogOptions,
+  SuenoLoggerOptions,
+  Transport,
+  TimeFormat,
+  LogHooks,
+  SuenoLogger as ISuenoLogger,
+} from './types';
 import { formatTime, formatMessage } from './formatters';
 import { createTransport } from './transports';
 import { LogGroup } from './log-group';
 import fastRedact from 'fast-redact';
 
-export class SuenoLogger<T extends string = 'ROOT'> {
+export class SuenoLogger<T extends string = 'ROOT'> implements ISuenoLogger<T> {
   protected name: T;
   private level: LogLevel;
   private traceId: string;
