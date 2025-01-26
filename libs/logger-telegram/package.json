@@ -1,0 +1,19 @@
+{
+  "name": "@sueno/logger-telegram",
+  "version": "0.1.0",
+  "description": "Telegram plugin for @sueno/logger",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "bun build ./src/index.ts --outdir ./dist",
+    "test": "bun test"
+  },
+  "peerDependencies": {
+    "@sueno/logger": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "bun-types": "latest"
+  }
+}
