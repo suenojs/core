@@ -125,3 +125,27 @@ logger.setTraceId('new-trace-id');
 ## License
 
 Apache 2.0
+
+## Performance Considerations
+
+For maximum performance in production environments, you can enable performance mode:
+
+```typescript
+const logger = createLogger({
+  performanceMode: true, // Disables pretty formatting for maximum performance
+  time: false, // Disable time for even better performance
+  hooks: undefined, // Disable hooks if not needed
+});
+```
+
+Performance comparison (operations/second):
+
+- Pretty mode: Beautiful colored output, great for development
+- Performance mode: High-speed logging optimized for production
+
+Performance tips:
+
+1. Use `performanceMode: true` in production
+2. Disable time if not needed
+3. Only enable hooks when required
+4. Consider using transport in batches for high-volume logging

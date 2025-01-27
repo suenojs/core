@@ -45,6 +45,9 @@ export interface SuenoLoggerOptions {
   redact?: RedactOptions;
   hooks?: LogHooks;
   plugins?: LoggerPlugin[];
+  performanceMode?: boolean;
+  noColors?: boolean;
+  silent?: boolean;
 }
 
 export interface Transport {
@@ -84,6 +87,7 @@ export interface SuenoLogger<T extends string = 'ROOT'> {
   setLevel(level: LogLevel): void;
   setTraceId(traceId: string): void;
   getUseAscii(): boolean;
+  getConfig(): SuenoLoggerOptions;
 }
 
 export interface LoggerPlugin {

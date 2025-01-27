@@ -1,5 +1,5 @@
 import { SuenoLogger } from './logger';
-import type { SuenoLoggerOptions, LogHooks, LogLevel, LogOptions } from './types';
+import type { SuenoLoggerOptions, LogHooks } from './types';
 
 export type { SuenoLoggerOptions, LogHooks, LogLevel, LogOptions } from './types';
 export type { LoggerPlugin } from './types';
